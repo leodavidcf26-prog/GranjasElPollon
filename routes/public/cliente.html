@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Cliente - Granjas El Pollón</title>
+    
+</head>
+
+<body>
+
+    <h1>Granjas El Pollón</h1>
+    <h2>Registrar Cliente</h2>
+
+    <form id="clienteForm">
+
+        <label for="cedula">Cédula:</label>
+        <input type="text" id="cedula" name="cedula" required>
+        <br><br>
+
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required>
+        <br><br>
+
+        <label for="telefono">Teléfono:</label>
+        <input type="text" id="telefono" name="telefono" required>
+        <br><br>
+
+        <label for="direccion">Dirección:</label>
+        <input type="text" id="direccion" name="direccion" required>
+        <br><br>
+
+        <label for="correoElectronico">Correo electrónico:</label>
+        <input type="email" id="correoElectronico" name="correoElectronico" required>
+        <br><br>
+
+        <label for="estado">Estado:</label>
+        <input type="text" id="estado" name="estado" required>
+        <br><br>
+
+        <button type="submit">Registrar cliente</button>
+
+    </form>
+
+    <p id="mensaje"></p>
+
+    <script>
+
+        const formulario = document.getElementById("clienteForm");
+        const mensaje = document.getElementById("mensaje");
+
+        formulario.addEventListener("submit", async function(evento) {
+
+            evento.preventDefault();
+
+            const datos = {
+                cedula: document.getElementById("cedula").value,
+                nombre: document.getElementById("nombre").value,
+                telefono: document.getElementById("telefono").value,
+                direccion: document.getElementById("direccion").value,
+                correoElectronico: document.getElementById("correoElectronico").value,
+                estado: document.getElementById("estado").value
+            };
+
+            try {
+
+                const respuesta = await fetch("/cliente", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(datos)
+                });
+
+                const resultado = await respuesta.text();
+
+                mensaje.textContent = resultado;
+
+            } catch (error) {
+
+                console.log(error);
+                mensaje.textContent = "No se pudo conectar con el servidor.";
+
+            }
+
+        });
+
+    </script>
+
+</body>
+</html>

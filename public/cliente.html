@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes - Granjas El Pollón</title>
+</head>
+
+<body>
+
+    <h1>Granjas El Pollón</h1>
+
+    <h2>Registrar Cliente</h2>
+
+    <form id="clienteForm">
+
+        <label for="cedula">Cédula:</label>
+        <input type="text" id="cedula" required>
+        <br><br>
+
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" required>
+        <br><br>
+
+        <label for="telefono">Teléfono:</label>
+        <input type="text" id="telefono" required>
+        <br><br>
+
+        <label for="direccion">Dirección:</label>
+        <input type="text" id="direccion" required>
+        <br><br>
+
+        <label for="correoElectronico">Correo electrónico:</label>
+        <input type="email" id="correoElectronico" required>
+        <br><br>
+
+        <label for="estado">Estado:</label>
+        <input type="text" id="estado" required>
+        <br><br>
+
+        <button type="submit">Registrar cliente</button>
+
+    </form>
+
+    <p id="mensaje"></p>
+
+
+    <hr>
+
+
+    <h2>Actualizar Cliente</h2>
+
+    <form id="actualizarForm">
+
+        <label for="actualizarCedula">Cédula del cliente:</label>
+        <input type="text" id="actualizarCedula" required>
+        <br><br>
+
+        <label for="actualizarNombre">Nuevo nombre:</label>
+        <input type="text" id="actualizarNombre" required>
+        <br><br>
+
+        <label for="actualizarTelefono">Nuevo teléfono:</label>
+        <input type="text" id="actualizarTelefono" required>
+        <br><br>
+
+        <label for="actualizarDireccion">Nueva dirección:</label>
+        <input type="text" id="actualizarDireccion" required>
+        <br><br>
+
+        <label for="actualizarCorreo">Nuevo correo electrónico:</label>
+        <input type="email" id="actualizarCorreo" required>
+        <br><br>
+
+        <label for="actualizarEstado">Nuevo estado:</label>
+        <input type="text" id="actualizarEstado" required>
+        <br><br>
+
+        <button type="submit">Actualizar cliente</button>
+
+    </form>
+
+    <p id="mensajeActualizar"></p>
+
+    <hr>
+
+    <h2>Eliminar Cliente</h2>
+
+    <form id="eliminarForm">
+
+        <label for="eliminarCedula">Cédula del cliente:</label>
+        <input type="text" id="eliminarCedula" required>
+        <br><br>
+
+        <button type="submit">Eliminar cliente</button>
+
+    </form>
+
+    <p id="mensajeEliminar"></p>
+
+    <script>
+
+        const formulario = document.getElementById("clienteForm");
+        const mensaje = document.getElementById("mensaje");
+
+        formulario.addEventListener("submit", async function(evento) {
+
+            evento.preventDefault();
+
+            const datos = {
+                cedula: document.getElementById("cedula").value,
+                nombre: document.getElementById("nombre").value,
+                telefono: document.getElementById("telefono").value,
+                direccion: document.getElementById("direccion").value,
+                correoElectronico: document.getElementById("correoElectronico").value,
+                estado: document.getElementById("estado").value
+            };
+
+            try {
+
+                const respuesta = await fetch("/cliente", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(datos)
+                });
+
+                const resultado = await respuesta.text();
+
+                mensaje.textContent = resultado;
+
+            } catch (error) {
+
+                console.log(error);
+                mensaje.textContent = "No se pudo conectar con el servidor.";
+
+            }
+
+        });
+
+
+        const actualizarForm = document.getElementById("actualizarForm");
+        const mensajeActualizar = document.getElementById("mensajeActualizar");
+
+        actualizarForm.addEventListener("submit", async function(evento) {
+
+            evento.preventDefault();
+
+            const cedula = document.getElementById("actualizarCedula").value;
+
+            const datos = {
+                nombre: document.getElementById("actualizarNombre").value,
+                telefono: document.getElementById("actualizarTelefono").value,
+                direccion: document.getElementById("actualizarDireccion").value,
+                correoElectronico: document.getElementById("actualizarCorreo").value,
+                estado: document.getElementById("actualizarEstado").value
+            };
+
+            try {
+
+                const respuesta = await fetch("/clientes/" + cedula, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(datos)
+                });
+
+                const resultado = await respuesta.text();
+
+                mensajeActualizar.textContent = resultado;
+
+            } catch (error) {
+
+                console.log(error);
+                mensajeActualizar.textContent = "No se pudo conectar con el servidor.";
+
+            }
+
+        });
+
+        const eliminarForm = document.getElementById("eliminarForm");
+        const mensajeEliminar = document.getElementById("mensajeEliminar");
+
+        eliminarForm.addEventListener("submit", async function(evento) {
+
+            evento.preventDefault();
+
+            const cedula = document.getElementById("eliminarCedula").value;
+
+            try {
+
+                const respuesta = await fetch("/clientes/" + cedula, {
+                    method: "DELETE"
+                });
+
+                const resultado = await respuesta.text();
+
+                mensajeEliminar.textContent = resultado;
+
+            } catch (error) {
+
+                console.log(error);
+                mensajeEliminar.textContent = "No se pudo conectar con el servidor.";
+
+            }
+
+        });
+
+    </script>
+
+</body>
+</html>
